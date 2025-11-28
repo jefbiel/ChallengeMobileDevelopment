@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// navigation not required here
+// navegação não é necessária aqui
 
 // Tipo que representa um hábito salvo no app
 type Habit = {

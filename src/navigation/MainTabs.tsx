@@ -8,6 +8,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
+// PlaceholderScreen removido; usando `PerfilScreen` para a aba 'Perfil'
+
 type TabIconProps = {
   routeName: string;
   color: string;
@@ -19,9 +21,11 @@ const ICON_SIZE = 26;
 
 const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size, focused }) => {
   if (routeName === 'HomeTab') {
+    // usa imagem local para o ícone da aba Início
     return (
       <Image
         source={require('../assets/img/home.png')}
+        // tintColor colore o ícone conforme o estado ativo/inativo
         style={[styles.iconImage, { tintColor: color }]}
         resizeMode="contain"
       />
@@ -39,8 +43,10 @@ const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size, focused })
   }
 
   if (routeName === 'Perfil') {
+    // agrupa a imagem para centralizar o rótulo da aba sob o ícone
     return (
       <View style={styles.perfilContainer}>
+        {/* quando focado, mostra um círculo de fundo sutil colorido; caso contrário, mantém transparente */}
         <View style={focused ? styles.perfilBgActive : styles.perfilBgInactive}>
           <Image
             source={require('../assets/img/user.png')}
@@ -58,14 +64,14 @@ const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size, focused })
 
 const createScreenOptions = ({ route }: { route: { name: string } }) => ({
   headerShown: false,
-  // React Navigation passes focused, color and size to tabBarIcon
+  // O React Navigation passa `focused`, `color` e `size` para `tabBarIcon`
   tabBarIcon: (props: { color: string; size: number; focused: boolean }) => (
     <TabBarIcon routeName={route.name} {...props} />
   ),
   tabBarActiveTintColor: '#3498DB',
   tabBarInactiveTintColor: 'gray',
   tabBarShowLabel: true,
-  // ensure labels use the tint colors
+  // garante que os rótulos usem as cores de tint
   tabBarLabelStyle: { fontSize: 12 },
 });
 
@@ -126,4 +132,4 @@ const MainTabs: React.FC = () => {
 
 export default MainTabs;
 
-// no local styles required
+// nenhum estilo local necessário
