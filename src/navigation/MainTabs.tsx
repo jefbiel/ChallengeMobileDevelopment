@@ -15,21 +15,31 @@ const PlaceholderScreen: React.FC<{ label: string }> = ({ label }) => (
 
 const ProfileScreen: React.FC = () => <PlaceholderScreen label="Perfil" />;
 
+type TabIconProps = {
+  routeName: string;
+  color: string;
+  size: number;
+};
+
+const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size }) => {
+  const iconName = routeName === 'Perfil' ? 'person-outline' : 'home-outline';
+  return <Ionicons name={iconName} size={size} color={color} />;
+};
+
+const createScreenOptions = ({ route }: { route: { name: string } }) => ({
+  headerShown: false,
+  tabBarIcon: (props: { color: string; size: number }) => (
+    <TabBarIcon routeName={route.name} {...props} />
+  ),
+  tabBarActiveTintColor: '#3498DB',
+  tabBarInactiveTintColor: 'gray',
+});
+
 const MainTabs: React.FC = () => {
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"
-      screenOptions={({ route }: { route: { name: string } }) => ({
-        headerShown: false,
-        tabBarIcon: ({ color, size }: { color: string; size: number }) => {
-          let iconName = 'home-outline';
-          if (route.name === 'HomeTab') iconName = 'home-outline';
-          if (route.name === 'Perfil') iconName = 'person-outline';
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: '#3498DB',
-        tabBarInactiveTintColor: 'gray',
-      })}
+      screenOptions={createScreenOptions}
     >
       <Tab.Screen name="HomeTab" component={HomeScreen} options={{ title: 'Início' }} />
       <Tab.Screen name="Perfil" component={ProfileScreen} options={{ title: 'Perfil' }} />
