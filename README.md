@@ -59,18 +59,15 @@ react-native-screens react-native-safe-area-context react-native-gesture-handler
 @react-native-picker/picker react-native-vector-icons @react-native-async-storage/async-storage
 ```
 
-### 4.3 Limpeza de Cache (Recomendado)
+### 4.3 Limpeza de Cache 
 
 ```bash
-# Reinicia o Metro Bundler com cache limpo
 npx react-native start --reset-cache
 
 cd android
 ./gradlew clean
 cd ..
 
-# Verificar cache do npm (opcional)
-npm cache verify
 ```
 
 ### 4.4 Executar no Emulador Android
