@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import HabitosScreen from '../screens/HabitosScreen';
@@ -14,15 +14,19 @@ type TabIconProps = {
   routeName: string;
   color: string;
   size: number;
+  focused: boolean;
 };
 
-const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size }) => {
+const ICON_SIZE = 26;
+
+const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size, focused }) => {
   if (routeName === 'HomeTab') {
     // use local image for the Home tab icon
     return (
       <Image
         source={require('../assets/img/home.png')}
-        style={{ width: size, height: size, tintColor: color }}
+        // tintColor will color the icon according to active/inactive tint
+        style={[styles.iconImage, { tintColor: color }]}
         resizeMode="contain"
       />
     );
@@ -41,12 +45,15 @@ const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size }) => {
   if (routeName === 'Perfil') {
     // wrap the image so the tab label is centered under the icon
     return (
-      <View style={{ width: size }}>
-        <Image
-          source={require('../assets/img/user.png')}
-          style={{ width: size, height: size, borderRadius: size / 2 }}
-          resizeMode="cover"
-        />
+      <View style={styles.perfilContainer}>
+        {/* when focused, show a subtle colored background circle; when not, keep transparent */}
+        <View style={focused ? styles.perfilBgActive : styles.perfilBgInactive}>
+          <Image
+            source={require('../assets/img/user.png')}
+            style={[styles.perfilImage, focused ? styles.perfilImageActive : styles.perfilImageInactive]}
+            resizeMode="cover"
+          />
+        </View>
       </View>
     );
   }
@@ -57,12 +64,53 @@ const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size }) => {
 
 const createScreenOptions = ({ route }: { route: { name: string } }) => ({
   headerShown: false,
-  tabBarIcon: (props: { color: string; size: number }) => (
+  // React Navigation passes focused, color and size to tabBarIcon
+  tabBarIcon: (props: { color: string; size: number; focused: boolean }) => (
     <TabBarIcon routeName={route.name} {...props} />
   ),
   tabBarActiveTintColor: '#3498DB',
   tabBarInactiveTintColor: 'gray',
   tabBarShowLabel: true,
+  // ensure labels use the tint colors
+  tabBarLabelStyle: { fontSize: 12 },
+});
+
+const styles = StyleSheet.create({
+  iconImage: {
+    width: ICON_SIZE,
+    height: ICON_SIZE,
+  },
+  perfilContainer: {
+    width: ICON_SIZE,
+    alignItems: 'center',
+  },
+  perfilBgActive: {
+    width: ICON_SIZE + 8,
+    height: ICON_SIZE + 8,
+    borderRadius: (ICON_SIZE + 8) / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3498DB22',
+  },
+  perfilBgInactive: {
+    width: ICON_SIZE + 8,
+    height: ICON_SIZE + 8,
+    borderRadius: (ICON_SIZE + 8) / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  perfilImage: {
+    width: ICON_SIZE,
+    height: ICON_SIZE,
+    borderRadius: ICON_SIZE / 2,
+  },
+  perfilImageActive: {
+    opacity: 1,
+  },
+  perfilImageInactive: {
+    opacity: 0.5,
+  },
 });
 
 const MainTabs: React.FC = () => {
