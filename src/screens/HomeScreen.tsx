@@ -10,7 +10,7 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+// removed unused useNavigation import
 import { Picker } from '@react-native-picker/picker';
 
 const sampleActivities = [
@@ -31,20 +31,19 @@ const sampleUpcoming = [
 ];
 
 const HomeScreen: React.FC = () => {
-  const navigation: any = useNavigation();
   const [progress] = useState(40); // exemplo estático
   const [selectedType, setSelectedType] = useState('sangue');
 
 
   const handleSchedule = (rec: any) => {
-    Alert.alert('Agendamento', `Agendamento necessário para ${rec.title}`);
+    Alert.alert('Remarcação', `Remarcação necessária para ${rec.title}`);
   };
 
   const handleViewDetails = (exam: any) => {
     const message = `${exam.title}\nLocal: ${exam.subtitle}\nData: ${exam.date}\n\nInstruções:\n- Jejum de 8 horas\n- Levar documento de identificação\n\nObservações: Resultado em até 3 dias úteis.`;
     Alert.alert(exam.title, message, [
       { text: 'Fechar', style: 'cancel' },
-      { text: 'Marcar', onPress: () => Alert.alert('Marcação', `Solicitada marcação para ${exam.title} em ${exam.date}`) },
+      { text: 'Remarcar', onPress: () => Alert.alert('Remarcação', `Solicitada remarcação para ${exam.title} em ${exam.date}`) },
     ]);
   };
 
@@ -109,7 +108,7 @@ const HomeScreen: React.FC = () => {
                     <Text style={styles.recTitle}>{rec.title}</Text>
                   </View>
                 <TouchableOpacity style={styles.recButton} onPress={() => handleSchedule(rec)}>
-                  <Text style={styles.recButtonText}>Marcar</Text>
+                  <Text style={styles.recButtonText}>Agendar</Text>
                 </TouchableOpacity>
               </View>
             ))}
