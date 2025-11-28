@@ -25,17 +25,16 @@ const sampleRecommendations = [
   { id: 'r3', title: 'Exame de visão', type: 'visao' },
 ];
 
+const sampleUpcoming = [
+  { id: 'u1', date: '25 Nov', title: 'Exame de sangue', subtitle: 'Laboratório São João' },
+  { id: 'u2', date: '02 Dez', title: 'Check-up cardiológico', subtitle: 'Clínica Saúde' },
+];
+
 const HomeScreen: React.FC = () => {
   const navigation: any = useNavigation();
   const [progress] = useState(40); // exemplo estático
   const [selectedType, setSelectedType] = useState('sangue');
 
-  const handleLogout = () => {
-    Alert.alert('Sair', 'Deseja sair da conta?', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Sair', style: 'destructive', onPress: () => navigation.replace('Login') },
-    ]);
-  };
 
   const handleSchedule = (rec: any) => {
     Alert.alert('Agendamento', `Agendamento necessário para ${rec.title}`);
@@ -98,9 +97,9 @@ const HomeScreen: React.FC = () => {
             .filter((r) => (selectedType ? r.type === selectedType : true))
             .map((rec) => (
               <View key={rec.id} style={styles.recCard}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.recTitle}>{rec.title}</Text>
-                </View>
+                  <View style={styles.recInfo}>
+                    <Text style={styles.recTitle}>{rec.title}</Text>
+                  </View>
                 <TouchableOpacity style={styles.recButton} onPress={() => handleSchedule(rec)}>
                   <Text style={styles.recButtonText}>Agendar</Text>
                 </TouchableOpacity>
@@ -108,7 +107,28 @@ const HomeScreen: React.FC = () => {
             ))}
         </View>
 
-        <View style={{ height: 48 }} />
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Próximos Exames</Text>
+
+          {sampleUpcoming.map((exam) => (
+            <View key={exam.id} style={styles.upcomingCard}>
+              <View style={styles.upcomingDate}>
+                <Text style={styles.upcomingDateText}>{exam.date}</Text>
+              </View>
+
+              <View style={styles.upcomingInfo}>
+                <Text style={styles.upcomingTitle}>{exam.title}</Text>
+                <Text style={styles.upcomingSubtitle}>{exam.subtitle}</Text>
+              </View>
+
+              <TouchableOpacity style={styles.upcomingLink} onPress={() => Alert.alert('Detalhes', `Abrir detalhes de: ${exam.title}`)}>
+                <Text style={styles.upcomingLinkText}>Ver detalhes</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.bottomSpacer} />
       </ScrollView>
     </View>
   );
@@ -169,6 +189,40 @@ const styles = StyleSheet.create({
   recTitle: { fontSize: 14, fontWeight: '600', color: '#02457a' },
   recButton: { backgroundColor: '#3498DB', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8 },
   recButtonText: { color: '#fff', fontWeight: '600' },
+  recInfo: { flex: 1 },
+
+  /* Próximos exames */
+  upcomingCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 10,
+    backgroundColor: '#fbfeff',
+    borderWidth: 1,
+    borderColor: '#e6f6f5',
+    marginBottom: 8,
+  },
+  upcomingDate: {
+    width: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  upcomingDateText: {
+    color: '#3498DB',
+    fontWeight: '700',
+  },
+  upcomingInfo: {
+    flex: 1,
+    paddingLeft: 8,
+  },
+  upcomingTitle: { fontSize: 16, fontWeight: '700', color: '#02457a' },
+  upcomingSubtitle: { color: '#a9c0bd', marginTop: 4 },
+  upcomingLink: {
+    paddingLeft: 8,
+  },
+  upcomingLinkText: { color: '#3498DB', fontWeight: '600' },
+
+  bottomSpacer: { height: 48 },
 });
 
 export default HomeScreen;
