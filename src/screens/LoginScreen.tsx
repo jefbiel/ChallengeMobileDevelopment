@@ -25,12 +25,8 @@ const LoginScreen: React.FC = () => {
     }
 
     // TODO: Integrar com AsyncStorage / API no futuro
-    Alert.alert('Sucesso', 'Login realizado com sucesso', [
-      {
-        text: 'OK',
-        onPress: () => navigation.replace('MainTabs'),
-      },
-    ]);
+    // Navega diretamente para a tela principal sem exibir popup
+    navigation.replace('MainTabs');
   };
 
   return (
