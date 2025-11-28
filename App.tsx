@@ -15,7 +15,7 @@ import MainTabs from './src/navigation/MainTabs';
 
 const Stack = createNativeStackNavigator();
 
-function App(): JSX.Element {
+function App(): React.ReactElement {
   return (
     <NavigationContainer>
       <StatusBar barStyle={'dark-content'} />
