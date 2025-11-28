@@ -46,6 +46,7 @@ const LoginScreen: React.FC = () => {
         />
 
         <Text style={styles.title}>Login</Text>
+        <Text style={styles.titleHelp}>Use seu e-mail e senha para acessar sua conta.</Text>
 
         <TextInput
           style={styles.input}
@@ -69,6 +70,7 @@ const LoginScreen: React.FC = () => {
         <TouchableOpacity style={styles.button} onPress={handleLogin} activeOpacity={0.8}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
+        <Text style={styles.signUpPrompt}>Não tem conta? Cadastre-se grátis e começe agora.</Text>
       </View>
     </KeyboardAvoidingView>
   );
@@ -97,10 +99,16 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   title: {
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: '700',
     color: '#02457a',
     marginBottom: 24,
+  },
+  titleHelp: {
+    fontSize: 14,
+    color: '#475569',
+    marginBottom: 12,
+    textAlign: 'center',
   },
   input: {
     width: '100%',
@@ -126,6 +134,12 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  signUpPrompt: {
+    marginTop: 12,
+    color: '#065f46',
+    fontSize: 13,
+    textAlign: 'center',
   },
 });
 
