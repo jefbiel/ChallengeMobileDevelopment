@@ -118,9 +118,3 @@ Projeto acadêmico — uso exclusivo para fins educacionais.
 
 👨‍💻 Desenvolvido pela **G³ — NewCare**
 **Pequenos hábitos, grandes conquistas.**
-
-
-
-
-
-
