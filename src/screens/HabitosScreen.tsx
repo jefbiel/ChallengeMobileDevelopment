@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  DeviceEventEmitter,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+// navigation not required here
 
 type Habit = {
   id: string;
@@ -18,15 +19,43 @@ type Habit = {
   description: string;
   category: string;
   completed?: boolean;
+  completionDate?: string;
+  xpEarned?: number;
 };
 
 const HABITS_KEY = '@habitos';
 
 const HabitosScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [xp, setXp] = useState<number>(0);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Exercício');
+
+  useEffect(() => {
+    loadHabits();
+    loadXp();
+  }, []);
+
+  const loadHabits = async () => {
+    try {
+      const json = await AsyncStorage.getItem(HABITS_KEY);
+      const current: Habit[] = json ? JSON.parse(json) : [];
+      setHabits(current);
+    } catch {
+      // ignore
+    }
+  };
+
+  const loadXp = async () => {
+    try {
+      const raw = await AsyncStorage.getItem('@xp');
+      const value = raw ? Number(raw) : 0;
+      setXp(value);
+    } catch {
+      // ignore
+    }
+  };
 
   const saveHabit = async () => {
     if (!name.trim() || !description.trim()) {
@@ -40,7 +69,8 @@ const HabitosScreen: React.FC = () => {
         name: name.trim(),
         description: description.trim(),
         category,
-        completed: false,
+          completed: false,
+          xpEarned: 0,
       };
 
       const json = await AsyncStorage.getItem(HABITS_KEY);
@@ -48,18 +78,61 @@ const HabitosScreen: React.FC = () => {
       const updated = [newHabit, ...current];
       await AsyncStorage.setItem(HABITS_KEY, JSON.stringify(updated));
 
+      // atualizar estado local e notificar Home
+      setHabits(updated);
+      DeviceEventEmitter.emit('habitsUpdated');
+
       Alert.alert('Sucesso', 'Hábito salvo com sucesso');
       setName('');
       setDescription('');
       setCategory('Exercício');
-
-      // voltar para a Home para que ela recarregue (useIsFocused na Home irá buscar)
-      // ou apenas navegar para a aba Home
-      // @ts-ignore
-      navigation.navigate('HomeTab');
     } catch {
       Alert.alert('Erro', 'Não foi possível salvar o hábito');
     }
+  };
+
+  const concludeHabit = async (id: string) => {
+    try {
+      const updated = habits.map((h) => {
+        if (h.id === id && !h.completed) {
+          return { ...h, completed: true, completionDate: new Date().toISOString(), xpEarned: 10 };
+        }
+        return h;
+      });
+      await AsyncStorage.setItem(HABITS_KEY, JSON.stringify(updated));
+
+      // atualizar XP
+      const raw = await AsyncStorage.getItem('@xp');
+      const currentXp = raw ? Number(raw) : 0;
+      const newXp = currentXp + 10;
+      await AsyncStorage.setItem('@xp', String(newXp));
+      setXp(newXp);
+
+      setHabits(updated);
+      DeviceEventEmitter.emit('habitsUpdated');
+    } catch {
+      Alert.alert('Erro', 'Não foi possível concluir o hábito');
+    }
+  };
+
+  const deleteHabit = async (id: string) => {
+    Alert.alert('Confirmar', 'Deseja excluir este hábito?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Excluir',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            const updated = habits.filter((h) => h.id !== id);
+            await AsyncStorage.setItem(HABITS_KEY, JSON.stringify(updated));
+            setHabits(updated);
+            DeviceEventEmitter.emit('habitsUpdated');
+          } catch {
+            Alert.alert('Erro', 'Não foi possível excluir o hábito');
+          }
+        },
+      },
+    ]);
   };
 
   return (
@@ -98,6 +171,71 @@ const HabitosScreen: React.FC = () => {
           <Text style={styles.saveButtonText}>Salvar Hábito</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Estatísticas */}
+      <View style={styles.statsRow}>
+        <View style={styles.statBox}>
+          <Text style={styles.statNumber}>{habits.filter((h) => !h.completed).length}</Text>
+          <Text style={styles.statLabel}>Ativos</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statNumber}>{habits.filter((h) => h.completed).length}</Text>
+          <Text style={styles.statLabel}>Concluídos</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statNumber}>{xp}</Text>
+          <Text style={styles.statLabel}>XP</Text>
+        </View>
+      </View>
+
+      {/* Hábitos Ativos */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Hábitos Ativos</Text>
+        {habits.filter((h) => !h.completed).length === 0 ? (
+          <Text style={styles.empty}>Nenhum hábito ativo.</Text>
+        ) : (
+          habits
+            .filter((h) => !h.completed)
+            .map((h) => (
+              <View key={h.id} style={styles.habitCard}>
+                <View style={styles.habitInfo}>
+                  <Text style={styles.habitTitle}>{h.name}</Text>
+                  <Text style={styles.habitCategory}>{h.category}</Text>
+                  <Text style={styles.habitDesc}>{h.description}</Text>
+                </View>
+                <View style={styles.habitActions}>
+                  <TouchableOpacity style={styles.concludeButton} onPress={() => concludeHabit(h.id)}>
+                    <Text style={styles.actionText}>Concluir</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.deleteButton} onPress={() => deleteHabit(h.id)}>
+                    <Text style={styles.actionText}>Excluir</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))
+        )}
+      </View>
+
+      {/* Histórico */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Histórico - Concluídos</Text>
+        {habits.filter((h) => h.completed).length === 0 ? (
+          <Text style={styles.empty}>Nenhum hábito concluído recentemente.</Text>
+        ) : (
+          habits
+            .filter((h) => h.completed)
+            .map((h) => (
+              <View key={h.id} style={styles.historyCard}>
+                <View style={styles.historyInfo}>
+                  <Text style={styles.habitTitle}>{h.name}</Text>
+                  <Text style={styles.historyMeta}>
+                    {h.completionDate ? new Date(h.completionDate).toLocaleString('pt-BR') : '-'} • {h.xpEarned || 0} XP
+                  </Text>
+                </View>
+              </View>
+            ))
+        )}
+      </View>
     </ScrollView>
   );
 };
@@ -112,6 +250,31 @@ const styles = StyleSheet.create({
   pickerWrapper: { borderWidth: 1, borderColor: '#dbeefb', borderRadius: 8, overflow: 'hidden', marginBottom: 12 },
   saveButton: { backgroundColor: '#2e8b57', padding: 12, borderRadius: 8, alignItems: 'center' },
   saveButtonText: { color: '#fff', fontWeight: '700' },
+  /* Estatísticas */
+  statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 },
+  statBox: { flex: 1, backgroundColor: '#f3fbff', padding: 12, borderRadius: 8, alignItems: 'center', marginHorizontal: 4, borderWidth: 1, borderColor: '#dbeefb' },
+  statNumber: { fontSize: 18, fontWeight: '700', color: '#02457a' },
+  statLabel: { fontSize: 12, color: '#065f46', marginTop: 4 },
+
+  section: { marginTop: 18 },
+  sectionTitle: { fontSize: 16, fontWeight: '700', color: '#02457a', marginBottom: 8 },
+  empty: { color: '#6b7280', fontStyle: 'italic' },
+
+  /* Hábitos */
+  habitCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fbfeff', borderWidth: 1, borderColor: '#dbeefb', padding: 12, borderRadius: 10, marginBottom: 8 },
+  habitInfo: { flex: 1 },
+  habitTitle: { fontSize: 14, fontWeight: '700', color: '#0f172a' },
+  habitCategory: { color: '#065f46', marginTop: 4 },
+  habitDesc: { color: '#475569', marginTop: 6 },
+  habitActions: { marginLeft: 8, alignItems: 'flex-end' },
+  concludeButton: { backgroundColor: '#2e8b57', paddingHorizontal: 10, paddingVertical: 8, borderRadius: 8, marginBottom: 8 },
+  deleteButton: { backgroundColor: '#e53e3e', paddingHorizontal: 10, paddingVertical: 8, borderRadius: 8 },
+  actionText: { color: '#fff', fontWeight: '700' },
+
+  /* Histórico */
+  historyCard: { backgroundColor: '#f9fff7', borderWidth: 1, borderColor: '#dfefe0', padding: 12, borderRadius: 10, marginBottom: 8 },
+  historyInfo: {},
+  historyMeta: { color: '#475569', marginTop: 6 },
 });
 
 export default HabitosScreen;
