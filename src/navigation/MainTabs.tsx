@@ -38,6 +38,16 @@ const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size }) => {
     );
   }
 
+  if (routeName === 'Perfil') {
+    return (
+      <Image
+        source={require('../assets/img/user.png')}
+        style={{ width: size, height: size, borderRadius: size / 2 }}
+        resizeMode="cover"
+      />
+    );
+  }
+
   const iconName = routeName === 'Perfil' ? 'person-outline' : 'home-outline';
   return <Ionicons name={iconName} size={size} color={color} />;
 };
