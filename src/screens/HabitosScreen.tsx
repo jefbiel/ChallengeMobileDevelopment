@@ -57,7 +57,7 @@ const HabitosScreen: React.FC = () => {
       // ou apenas navegar para a aba Home
       // @ts-ignore
       navigation.navigate('HomeTab');
-    } catch (err) {
+    } catch {
       Alert.alert('Erro', 'Não foi possível salvar o hábito');
     }
   };
