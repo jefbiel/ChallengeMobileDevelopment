@@ -132,4 +132,4 @@ const MainTabs: React.FC = () => {
 
 export default MainTabs;
 
-// nenhum estilo local necessário
+
