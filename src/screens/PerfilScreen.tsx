@@ -8,8 +8,10 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import globalStyles, { colors } from '../assets/styles';
 
 const HABITS_KEY = '@habitos';
 const XP_KEY = '@xp';
@@ -94,24 +96,25 @@ const PerfilScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+      <ScrollView contentContainerStyle={globalStyles.page}>
       <View style={styles.header}>
         <Image
           source={require('../assets/img/GabrielM.jpg')}
-          style={styles.avatar}
+          style={globalStyles.avatar}
           resizeMode="cover"
         />
         <View style={styles.userInfo}>
           <Text style={styles.userName}>Gabriel Mendonça</Text>
           <Text style={styles.userEmail}>gabriel@example.com</Text>
         </View>
-        <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
-          <Text style={styles.editButtonText}>Editar</Text>
+        <TouchableOpacity style={globalStyles.editButton} onPress={handleEdit}>
+          <Text style={globalStyles.editButtonText}>Editar</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Experiência</Text>
+      <View style={globalStyles.card}>
+        <Text style={globalStyles.cardTitle}>Experiência</Text>
         <Text style={styles.xpLarge}>{xp} XP</Text>
         <Text style={styles.levelText}>Nível {level} – {levelTitle(level)}</Text>
         <View style={styles.progressBar}>
@@ -120,8 +123,8 @@ const PerfilScreen: React.FC = () => {
         <Text style={styles.progressSmall}>{progressToNext}% para o próximo nível</Text>
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Histórico de Hábitos (recentes)</Text>
+      <View style={globalStyles.card}>
+        <Text style={globalStyles.cardTitle}>Histórico de Hábitos (recentes)</Text>
         {habits.length === 0 ? (
           <Text style={styles.emptyText}>Nenhum hábito concluído recentemente.</Text>
         ) : (
@@ -137,46 +140,41 @@ const PerfilScreen: React.FC = () => {
         )}
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Estatísticas</Text>
+      <View style={globalStyles.card}>
+        <Text style={globalStyles.cardTitle}>Estatísticas</Text>
         <Text style={styles.statText}>Hábitos concluídos: {totalCompleted}</Text>
         <Text style={styles.statText}>Categorias mais praticadas: {topCategories.join(', ') || '—'}</Text>
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Recompensas & Metas</Text>
+      <View style={globalStyles.card}>
+        <Text style={globalStyles.cardTitle}>Recompensas & Metas</Text>
         <Text style={styles.statText}>Medalhas desbloqueadas: {totalCompleted >= 10 ? 'Bronze' : 'Nenhuma'}</Text>
         <Text style={styles.statText}>Próxima meta: Conclua 5 hábitos de sono para ganhar +50 XP</Text>
       </View>
 
-      <View style={styles.spacerSmall} />
+      <View style={globalStyles.spacerSmall} />
 
-      <View style={styles.actionsRow}>
-        <TouchableOpacity style={styles.secondaryButton} onPress={handleChangePassword}>
-          <Text style={styles.secondaryButtonText}>Alterar senha</Text>
+      <View style={globalStyles.actionsRow}>
+        <TouchableOpacity style={globalStyles.secondaryButton} onPress={handleChangePassword}>
+          <Text style={globalStyles.secondaryButtonText}>Alterar senha</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.ghostButton} onPress={handleLogout}>
-          <Text style={styles.ghostButtonText}>Sair</Text>
+        <TouchableOpacity style={globalStyles.ghostButton} onPress={handleLogout}>
+          <Text style={globalStyles.ghostButtonText}>Sair</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.spacerLarge} />
-    </ScrollView>
+        <View style={globalStyles.spacerLarge} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 16, backgroundColor: '#fff' },
   header: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-  avatar: { width: 72, height: 72, borderRadius: 36, marginRight: 12 },
   userInfo: { flex: 1 },
   userName: { fontSize: 18, fontWeight: '700', color: '#02457a' },
   userEmail: { color: '#6b7280' },
-  editButton: { backgroundColor: '#3498DB', paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8 },
-  editButtonText: { color: '#fff', fontWeight: '700' },
 
-  card: { backgroundColor: '#fbfeff', padding: 12, borderRadius: 10, marginBottom: 12, borderWidth: 1, borderColor: '#e6f3fb' },
-  cardTitle: { fontWeight: '700', color: '#02457a', marginBottom: 8 },
   xpLarge: { fontSize: 28, fontWeight: '800', color: '#065f46' },
   levelText: { color: '#065f46', marginTop: 4 },
   progressBar: { height: 12, backgroundColor: '#e6f3fb', borderRadius: 8, marginTop: 8, overflow: 'hidden' },
@@ -191,14 +189,6 @@ const styles = StyleSheet.create({
   habitXp: { color: '#065f46', fontWeight: '700' },
 
   statText: { color: '#0f172a', marginBottom: 6 },
-
-  actionsRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  secondaryButton: { backgroundColor: '#2e8b57', padding: 12, borderRadius: 8, flex: 1, marginRight: 8, alignItems: 'center' },
-  secondaryButtonText: { color: '#fff', fontWeight: '700' },
-  ghostButton: { borderWidth: 1, borderColor: '#d1d5db', padding: 12, borderRadius: 8, flex: 1, marginLeft: 8, alignItems: 'center' },
-  ghostButtonText: { color: '#0f172a', fontWeight: '700' },
-  spacerSmall: { height: 12 },
-  spacerLarge: { height: 48 },
 });
 
 export default PerfilScreen;

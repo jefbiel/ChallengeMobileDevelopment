@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, Image, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import globalStyles from '../assets/styles';
 
 const LoginScreen: React.FC = () => {
   const navigation: any = useNavigation();
@@ -31,21 +32,21 @@ const LoginScreen: React.FC = () => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={globalStyles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View style={styles.inner}>
+      <View style={globalStyles.inner}>
         <Image
           source={require('../assets/img/NewCareLogo.png')}
-          style={styles.logoLarge}
+          style={globalStyles.logoLarge}
           resizeMode="contain"
         />
 
-        <Text style={styles.title}>Login</Text>
-        <Text style={styles.titleHelp}>Use seu e-mail e senha para acessar sua conta.</Text>
+        <Text style={globalStyles.title}>Login</Text>
+        <Text style={globalStyles.titleHelp}>Use seu e-mail e senha para acessar sua conta.</Text>
 
         <TextInput
-          style={styles.input}
+          style={globalStyles.input}
           placeholder="E-mail"
           placeholderTextColor="#6b7280"
           keyboardType="email-address"
@@ -55,7 +56,7 @@ const LoginScreen: React.FC = () => {
         />
 
         <TextInput
-          style={styles.input}
+          style={globalStyles.input}
           placeholder="Senha"
           placeholderTextColor="#6b7280"
           secureTextEntry
@@ -63,80 +64,12 @@ const LoginScreen: React.FC = () => {
           onChangeText={setPassword}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin} activeOpacity={0.8}>
-          <Text style={styles.buttonText}>Entrar</Text>
+        <TouchableOpacity style={globalStyles.button} onPress={handleLogin} activeOpacity={0.8}>
+          <Text style={globalStyles.buttonText}>Entrar</Text>
         </TouchableOpacity>
-        <Text style={styles.signUpPrompt}>Não tem conta? Cadastre-se grátis e começe agora.</Text>
+        <Text style={globalStyles.signUpPrompt}>Não tem conta? Cadastre-se grátis e começe agora.</Text>
       </View>
     </KeyboardAvoidingView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-  },
-  inner: {
-    paddingHorizontal: 24,
-    alignItems: 'center',
-  },
-  logo: {
-    width: 140,
-    height: 140,
-    marginBottom: 16,
-    borderRadius: 12,
-  },
-  logoLarge: {
-    width: 220,
-    height: 220,
-    marginBottom: 16,
-    borderRadius: 12,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#02457a',
-    marginBottom: 24,
-  },
-  titleHelp: {
-    fontSize: 14,
-    color: '#475569',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  input: {
-    width: '100%',
-    height: 48,
-    backgroundColor: '#f3f7f9',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#e6eef6',
-    color: '#0f172a',
-  },
-  button: {
-    marginTop: 8,
-    width: '100%',
-    height: 48,
-    backgroundColor: '#2e8b57',
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  signUpPrompt: {
-    marginTop: 12,
-    color: '#065f46',
-    fontSize: 13,
-    textAlign: 'center',
-  },
-});
-
 export default LoginScreen;
