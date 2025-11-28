@@ -43,7 +43,7 @@ const HomeScreen: React.FC = () => {
     <View style={styles.screen}>
       <View style={styles.header}>
         <Image
-          source={require('../assets/img/NewCareLogo.png')}
+          source={require('../assets/img/NewCareLogoHorizontal.png')}
           style={styles.logo}
           resizeMode="contain"
         />
