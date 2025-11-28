@@ -95,16 +95,6 @@ npx react-native run-android --variant=debug
 
 ---
 
-## 5️⃣ Evidências para Entrega
-
-No PDF ou ZIP incluir:
-
-* ✔ Prints das telas (Login, Home, Hábitos, Perfil) no emulador Android
-* ✔ Print do diretório do projeto e fontes (.tsx / estilos)
-* ✔ Link do repositório GitHub
-* 🎥 Vídeo curto demonstrando funcionamento (opcional)
-
----
 
 ## 🏁 Resultado Esperado
 
@@ -128,6 +118,8 @@ Projeto acadêmico — uso exclusivo para fins educacionais.
 
 👨‍💻 Desenvolvido pela **G³ — NewCare**
 **Pequenos hábitos, grandes conquistas.**
+
+
 
 
 
