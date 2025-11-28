@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import globalStyles, { colors } from '../assets/styles';
+import globalStyles from '../assets/styles';
 
 const HABITS_KEY = '@habitos';
 const XP_KEY = '@xp';
@@ -96,7 +96,7 @@ const PerfilScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+    <SafeAreaView style={globalStyles.safeArea}>
       <ScrollView contentContainerStyle={globalStyles.page}>
       <View style={styles.header}>
         <Image

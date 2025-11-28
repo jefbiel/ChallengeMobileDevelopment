@@ -77,6 +77,8 @@ const globalStyles = StyleSheet.create({
 
   // Logo sizes
   logoLarge: { width: 220, height: 220, marginBottom: 16, borderRadius: 12 },
+  // Safe area wrapper for screens to avoid inline styles
+  safeArea: { flex: 1, backgroundColor: colors.white },
 });
 
 export default globalStyles;
