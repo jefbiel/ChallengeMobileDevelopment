@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { View, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import HabitosScreen from '../screens/HabitosScreen';
@@ -39,12 +39,15 @@ const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size }) => {
   }
 
   if (routeName === 'Perfil') {
+    // wrap the image so the tab label is centered under the icon
     return (
-      <Image
-        source={require('../assets/img/user.png')}
-        style={{ width: size, height: size, borderRadius: size / 2 }}
-        resizeMode="cover"
-      />
+      <View style={{ width: size }}>
+        <Image
+          source={require('../assets/img/user.png')}
+          style={{ width: size, height: size, borderRadius: size / 2 }}
+          resizeMode="cover"
+        />
+      </View>
     );
   }
 
