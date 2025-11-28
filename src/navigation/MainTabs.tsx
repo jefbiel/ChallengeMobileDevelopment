@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
-import { View, Text } from 'react-native';
+import HabitosScreen from '../screens/HabitosScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
@@ -22,6 +22,27 @@ type TabIconProps = {
 };
 
 const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size }) => {
+  if (routeName === 'HomeTab') {
+    // use local image for the Home tab icon
+    return (
+      <Image
+        source={require('../assets/img/home.png')}
+        style={{ width: size, height: size, tintColor: color }}
+        resizeMode="contain"
+      />
+    );
+  }
+
+  if (routeName === 'Habitos') {
+    return (
+      <Image
+        source={require('../assets/img/puzzle.png')}
+        style={{ width: size, height: size, tintColor: color }}
+        resizeMode="contain"
+      />
+    );
+  }
+
   const iconName = routeName === 'Perfil' ? 'person-outline' : 'home-outline';
   return <Ionicons name={iconName} size={size} color={color} />;
 };
@@ -42,6 +63,7 @@ const MainTabs: React.FC = () => {
       screenOptions={createScreenOptions}
     >
       <Tab.Screen name="HomeTab" component={HomeScreen} options={{ title: 'Início' }} />
+      <Tab.Screen name="Habitos" component={HabitosScreen} options={{ title: 'Hábitos' }} />
       <Tab.Screen name="Perfil" component={ProfileScreen} options={{ title: 'Perfil' }} />
     </Tab.Navigator>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,8 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 // removed unused useNavigation import
 import { Picker } from '@react-native-picker/picker';
 
@@ -30,9 +32,74 @@ const sampleUpcoming = [
   { id: 'u2', date: '02 Dez', title: 'Check-up cardiológico', subtitle: 'Clínica Saúde' },
 ];
 
+const HABITS_KEY = '@habitos';
+const XP_KEY = '@xp';
+
 const HomeScreen: React.FC = () => {
-  const [progress] = useState(40); // exemplo estático
+  const [progress, setProgress] = useState(0);
+  const [xp, setXp] = useState(0);
+  const [habits, setHabits] = useState<any[]>([]);
   const [selectedType, setSelectedType] = useState('sangue');
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const raw = await AsyncStorage.getItem(HABITS_KEY);
+        const list = raw ? JSON.parse(raw) : [];
+        setHabits(list);
+        updateProgress(list);
+      } catch {
+        // ignore
+      }
+
+      try {
+        const rawXp = await AsyncStorage.getItem(XP_KEY);
+        const value = rawXp ? Number(rawXp) : 0;
+        setXp(value);
+      } catch {
+        // ignore
+      }
+    };
+
+    if (isFocused) fetch();
+  }, [isFocused]);
+
+  const updateProgress = (list: any[]) => {
+    if (!list || list.length === 0) {
+      setProgress(0);
+      return;
+    }
+    const completed = list.filter((h) => h.completed).length;
+    const p = Math.round((completed / list.length) * 100);
+    setProgress(p);
+  };
+
+  const toggleComplete = async (habitId: string) => {
+    try {
+      let increased = false;
+      const updated = habits.map((h) => {
+        if (h.id === habitId) {
+          const wasCompleted = Boolean(h.completed);
+          if (!wasCompleted) increased = true;
+          return { ...h, completed: !wasCompleted };
+        }
+        return h;
+      });
+
+      if (increased) {
+        const newXp = xp + 10;
+        await AsyncStorage.setItem(XP_KEY, String(newXp));
+        setXp(newXp);
+      }
+
+      setHabits(updated);
+      updateProgress(updated);
+      await AsyncStorage.setItem(HABITS_KEY, JSON.stringify(updated));
+    } catch {
+      Alert.alert('Erro', 'Não foi possível atualizar o hábito');
+    }
+  };
 
 
   const handleSchedule = (rec: any) => {
@@ -84,6 +151,30 @@ const HomeScreen: React.FC = () => {
             <View style={[styles.progressFill, { width: `${progress}%` }]} />
           </View>
           <Text style={styles.progressText}>Progresso: {progress}%</Text>
+          <Text style={styles.xpText}>XP: {xp}</Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Hábitos</Text>
+          {habits.length === 0 ? (
+            <Text style={styles.emptyText}>Nenhum hábito registrado.</Text>
+          ) : (
+            habits.map((h) => (
+              <View key={h.id} style={styles.habitCard}>
+                <View style={styles.habitInfo}>
+                  <Text style={styles.cardTitle}>{h.name}</Text>
+                  <Text style={styles.cardDetail}>{h.description}</Text>
+                  <Text style={styles.habitCategory}>{h.category}</Text>
+                </View>
+                <TouchableOpacity
+                  style={[styles.habitButton, h.completed ? styles.habitButtonCompleted : {}]}
+                  onPress={() => toggleComplete(h.id)}
+                >
+                  <Text style={styles.habitButtonText}>{h.completed ? 'Feito' : 'Marcar'}</Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
         </View>
 
         <View style={styles.section}>
@@ -180,6 +271,7 @@ const styles = StyleSheet.create({
   },
   progressFill: { height: '100%', backgroundColor: '#2e8b57' },
   progressText: { marginTop: 6, color: '#0f172a' },
+  xpText: { marginTop: 6, color: '#0f172a', fontWeight: '700' },
   pickerRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
   pickerLabel: { width: 60, color: '#0f172a' },
   pickerWrapper: { flex: 1, borderWidth: 1, borderColor: '#e6eef6', borderRadius: 8, overflow: 'hidden' },
@@ -197,6 +289,24 @@ const styles = StyleSheet.create({
   recButton: { backgroundColor: '#3498DB', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8 },
   recButtonText: { color: '#fff', fontWeight: '600' },
   recInfo: { flex: 1 },
+
+  /* Hábitos */
+  habitCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 10,
+    backgroundColor: '#fbfffb',
+    borderWidth: 1,
+    borderColor: '#dbeee0',
+    marginBottom: 8,
+  },
+  habitInfo: { flex: 1 },
+  habitCategory: { color: '#065f46', marginTop: 4 },
+  habitButton: { backgroundColor: '#3498DB', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8 },
+  habitButtonCompleted: { backgroundColor: '#94d3a2' },
+  habitButtonText: { color: '#fff', fontWeight: '700' },
+  emptyText: { color: '#475569' },
 
   /* Próximos exames */
   upcomingCard: {
