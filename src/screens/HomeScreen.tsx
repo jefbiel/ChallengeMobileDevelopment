@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
+import { DeviceEventEmitter } from 'react-native';
 // removed unused useNavigation import
 import { Picker } from '@react-native-picker/picker';
 
@@ -43,7 +44,7 @@ const HomeScreen: React.FC = () => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    const fetch = async () => {
+    const loadAll = async () => {
       try {
         const raw = await AsyncStorage.getItem(HABITS_KEY);
         const list = raw ? JSON.parse(raw) : [];
@@ -62,7 +63,14 @@ const HomeScreen: React.FC = () => {
       }
     };
 
-    if (isFocused) fetch();
+    if (isFocused) loadAll();
+
+    // escutar eventos para atualizações em tempo real vindas da aba Hábitos
+    const subscription = DeviceEventEmitter.addListener('habitsUpdated', () => {
+      loadAll();
+    });
+
+    return () => subscription.remove();
   }, [isFocused]);
 
   const updateProgress = (list: any[]) => {
