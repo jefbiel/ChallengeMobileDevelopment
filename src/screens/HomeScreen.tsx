@@ -157,9 +157,7 @@ const HomeScreen: React.FC = () => {
 
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.welcome}>Bem-vindo, Gabriel</Text>
-        <Text style={styles.subtitle}>Pequenos hábitos. 
-            Grandes conquistas.</Text>
-o
+        <Text style={styles.subtitle}>{'Pequenos hábitos.\nGrandes conquistas.'}</Text>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Resumo rápido</Text>
           {sampleActivities.map((a) => (
