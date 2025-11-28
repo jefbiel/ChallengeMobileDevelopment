@@ -8,8 +8,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
-// PlaceholderScreen removed; using `PerfilScreen` for the Perfil tab
-
 type TabIconProps = {
   routeName: string;
   color: string;
@@ -21,11 +19,9 @@ const ICON_SIZE = 26;
 
 const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size, focused }) => {
   if (routeName === 'HomeTab') {
-    // use local image for the Home tab icon
     return (
       <Image
         source={require('../assets/img/home.png')}
-        // tintColor will color the icon according to active/inactive tint
         style={[styles.iconImage, { tintColor: color }]}
         resizeMode="contain"
       />
@@ -43,10 +39,8 @@ const TabBarIcon: React.FC<TabIconProps> = ({ routeName, color, size, focused })
   }
 
   if (routeName === 'Perfil') {
-    // wrap the image so the tab label is centered under the icon
     return (
       <View style={styles.perfilContainer}>
-        {/* when focused, show a subtle colored background circle; when not, keep transparent */}
         <View style={focused ? styles.perfilBgActive : styles.perfilBgInactive}>
           <Image
             source={require('../assets/img/user.png')}
