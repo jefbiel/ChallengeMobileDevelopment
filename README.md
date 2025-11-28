@@ -53,6 +53,9 @@ Protótipo acadêmico para a disciplina **Mobile Development and IoT**.
 ```bash
 npm install
 
+```
+
+```bash
 # Navegação e utilitários
 npm install @react-navigation/native @react-navigation/native-stack @react-navigation/bottom-tabs \
 react-native-screens react-native-safe-area-context react-native-gesture-handler \
