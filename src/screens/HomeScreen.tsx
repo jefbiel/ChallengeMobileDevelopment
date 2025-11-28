@@ -44,7 +44,7 @@ const HomeScreen: React.FC = () => {
     const message = `${exam.title}\nLocal: ${exam.subtitle}\nData: ${exam.date}\n\nInstruções:\n- Jejum de 8 horas\n- Levar documento de identificação\n\nObservações: Resultado em até 3 dias úteis.`;
     Alert.alert(exam.title, message, [
       { text: 'Fechar', style: 'cancel' },
-      { text: 'Agendar', onPress: () => Alert.alert('Agendamento', `Solicitado agendamento para ${exam.title} em ${exam.date}`) },
+      { text: 'Marcar', onPress: () => Alert.alert('Marcação', `Solicitada marcação para ${exam.title} em ${exam.date}`) },
     ]);
   };
 
@@ -109,7 +109,7 @@ const HomeScreen: React.FC = () => {
                     <Text style={styles.recTitle}>{rec.title}</Text>
                   </View>
                 <TouchableOpacity style={styles.recButton} onPress={() => handleSchedule(rec)}>
-                  <Text style={styles.recButtonText}>Agendar</Text>
+                  <Text style={styles.recButtonText}>Marcar</Text>
                 </TouchableOpacity>
               </View>
             ))}
