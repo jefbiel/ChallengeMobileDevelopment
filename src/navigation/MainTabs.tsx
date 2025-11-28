@@ -54,6 +54,7 @@ const createScreenOptions = ({ route }: { route: { name: string } }) => ({
   ),
   tabBarActiveTintColor: '#3498DB',
   tabBarInactiveTintColor: 'gray',
+  tabBarShowLabel: true,
 });
 
 const MainTabs: React.FC = () => {
@@ -63,7 +64,11 @@ const MainTabs: React.FC = () => {
       screenOptions={createScreenOptions}
     >
       <Tab.Screen name="HomeTab" component={HomeScreen} options={{ title: 'Início' }} />
-      <Tab.Screen name="Habitos" component={HabitosScreen} options={{ title: 'Hábitos' }} />
+      <Tab.Screen
+        name="Habitos"
+        component={HabitosScreen}
+        options={{ title: 'Hábitos', tabBarLabel: 'Hábitos', tabBarAccessibilityLabel: 'Hábitos' }}
+      />
       <Tab.Screen name="Perfil" component={ProfileScreen} options={{ title: 'Perfil' }} />
     </Tab.Navigator>
   );
