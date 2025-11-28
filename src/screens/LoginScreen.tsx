@@ -28,7 +28,7 @@ const LoginScreen: React.FC = () => {
     Alert.alert('Sucesso', 'Login realizado com sucesso', [
       {
         text: 'OK',
-        onPress: () => navigation.navigate('Home'),
+        onPress: () => navigation.replace('MainTabs'),
       },
     ]);
   };
@@ -40,8 +40,8 @@ const LoginScreen: React.FC = () => {
     >
       <View style={styles.inner}>
         <Image
-          source={{ uri: 'https://via.placeholder.com/140x140.png?text=Logo' }}
-          style={styles.logo}
+          source={require('../assets/img/NewCareLogo.png')}
+          style={styles.logoLarge}
           resizeMode="contain"
         />
 
@@ -87,6 +87,12 @@ const styles = StyleSheet.create({
   logo: {
     width: 140,
     height: 140,
+    marginBottom: 16,
+    borderRadius: 12,
+  },
+  logoLarge: {
+    width: 220,
+    height: 220,
     marginBottom: 16,
     borderRadius: 12,
   },

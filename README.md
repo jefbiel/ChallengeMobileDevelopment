@@ -95,3 +95,55 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+## Dependências usadas neste projeto
+
+O projeto utiliza as seguintes bibliotecas de navegação, UI e utilitários:
+
+- `@react-navigation/native`
+- `@react-navigation/native-stack`
+- `@react-navigation/bottom-tabs`
+- `react-native-screens`
+- `react-native-safe-area-context`
+- `react-native-gesture-handler`
+- `@react-native-picker/picker`
+- `react-native-vector-icons`
+
+Comandos de instalação (npm):
+
+```bash
+npm install @react-navigation/native @react-navigation/native-stack @react-navigation/bottom-tabs \
+	react-native-screens react-native-safe-area-context react-native-gesture-handler \
+	@react-native-picker/picker react-native-vector-icons
+```
+
+Observações:
+- Após instalar dependências nativas (iOS), rode `pod install` dentro da pasta `ios`:
+
+```bash
+cd ios && pod install && cd ..
+```
+
+- Reinicie o Metro com cache limpo quando adicionar/alterar dependências ou assets:
+
+```bash
+npx react-native start --reset-cache
+```
+
+## Assets
+
+Coloque os arquivos de imagem usados pelo app em `src/assets/img/`:
+
+```
+src/assets/img/
+	NewCareLogo.png
+	NewCareLogoHorizontal.png
+	bell.png
+```
+
+No código, importe imagens locais usando `require`, por exemplo:
+
+```tsx
+<Image source={require('./src/assets/img/NewCareLogo.png')} />
+```
+
