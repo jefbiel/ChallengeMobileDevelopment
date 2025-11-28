@@ -36,13 +36,19 @@ const sampleUpcoming = [
 const HABITS_KEY = '@habitos';
 const XP_KEY = '@xp';
 
+// Tela principal: mostra resumo, progresso e lista de hábitos.
 const HomeScreen: React.FC = () => {
+  // percentagem de hábitos concluídos
   const [progress, setProgress] = useState(0);
+  // XP total do usuário
   const [xp, setXp] = useState(0);
+  // hábitos carregados do armazenamento
   const [habits, setHabits] = useState<any[]>([]);
+  // filtro do tipo de recomendação
   const [selectedType, setSelectedType] = useState('sangue');
   const isFocused = useIsFocused();
 
+  // Carrega hábitos e XP quando a aba fica focada e quando receber eventos
   useEffect(() => {
     const loadAll = async () => {
       try {
@@ -51,7 +57,7 @@ const HomeScreen: React.FC = () => {
         setHabits(list);
         updateProgress(list);
       } catch {
-        // ignore
+        // ignore erros de leitura
       }
 
       try {
@@ -63,16 +69,19 @@ const HomeScreen: React.FC = () => {
       }
     };
 
+    // carrega ao ganhar foco
     if (isFocused) loadAll();
 
-    // escutar eventos para atualizações em tempo real vindas da aba Hábitos
+    // escuta atualizações emitidas pela aba Hábitos para sincronizar em tempo real
     const subscription = DeviceEventEmitter.addListener('habitsUpdated', () => {
       loadAll();
     });
 
+    // remove listener ao desmontar
     return () => subscription.remove();
   }, [isFocused]);
 
+  // Calcula e atualiza a porcentagem de conclusão dos hábitos
   const updateProgress = (list: any[]) => {
     if (!list || list.length === 0) {
       setProgress(0);
@@ -83,6 +92,8 @@ const HomeScreen: React.FC = () => {
     setProgress(p);
   };
 
+  // Alterna estado de concluído para o hábito clicado
+  // Se for a primeira vez, soma XP e grava a data de conclusão
   const toggleComplete = async (habitId: string) => {
     try {
       let increased = false;
@@ -105,6 +116,7 @@ const HomeScreen: React.FC = () => {
         setXp(newXp);
       }
 
+      // atualiza estado local, progresso e persiste mudanças
       setHabits(updated);
       updateProgress(updated);
       await AsyncStorage.setItem(HABITS_KEY, JSON.stringify(updated));
@@ -145,8 +157,9 @@ const HomeScreen: React.FC = () => {
 
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.welcome}>Bem-vindo, Gabriel</Text>
-        <Text style={styles.subtitle}>Sua saúde em foco</Text>
-
+        <Text style={styles.subtitle}>Pequenos hábitos. 
+            Grandes conquistas.</Text>
+o
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Resumo rápido</Text>
           {sampleActivities.map((a) => (

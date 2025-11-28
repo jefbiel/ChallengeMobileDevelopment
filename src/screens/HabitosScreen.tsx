@@ -1,3 +1,5 @@
+// Tela de Hábitos: permite criar, listar, concluir e excluir hábitos.
+// Comentários simples adicionados para explicar cada parte do código.
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -13,6 +15,7 @@ import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // navigation not required here
 
+// Tipo que representa um hábito salvo no app
 type Habit = {
   id: string;
   name: string;
@@ -23,40 +26,48 @@ type Habit = {
   xpEarned?: number;
 };
 
+// Chave usada no AsyncStorage para persistir hábitos
 const HABITS_KEY = '@habitos';
 
 const HabitosScreen: React.FC = () => {
+  // Estado local: lista de hábitos e XP acumulado
   const [habits, setHabits] = useState<Habit[]>([]);
   const [xp, setXp] = useState<number>(0);
+
+  // Campos do formulário para novo hábito
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Exercício');
 
+  // Ao montar o componente, carregamos hábitos e XP do armazenamento
   useEffect(() => {
     loadHabits();
     loadXp();
   }, []);
 
+  // Carrega os hábitos do AsyncStorage e atualiza o estado local
   const loadHabits = async () => {
     try {
       const json = await AsyncStorage.getItem(HABITS_KEY);
       const current: Habit[] = json ? JSON.parse(json) : [];
       setHabits(current);
     } catch {
-      // ignore
+      // Se ocorrer erro, ignoramos para não travar a UI
     }
   };
 
+  // Carrega o XP total armazenado
   const loadXp = async () => {
     try {
       const raw = await AsyncStorage.getItem('@xp');
       const value = raw ? Number(raw) : 0;
       setXp(value);
     } catch {
-      // ignore
+      // Ignora erros de leitura
     }
   };
 
+  // Salva um novo hábito: valida campos, persiste e notifica a Home
   const saveHabit = async () => {
     if (!name.trim() || !description.trim()) {
       Alert.alert('Por favor, preencha todos os campos');
@@ -69,16 +80,17 @@ const HabitosScreen: React.FC = () => {
         name: name.trim(),
         description: description.trim(),
         category,
-          completed: false,
-          xpEarned: 0,
+        completed: false,
+        xpEarned: 0,
       };
 
+      // lê lista atual, adiciona novo hábito e persiste
       const json = await AsyncStorage.getItem(HABITS_KEY);
       const current: Habit[] = json ? JSON.parse(json) : [];
       const updated = [newHabit, ...current];
       await AsyncStorage.setItem(HABITS_KEY, JSON.stringify(updated));
 
-      // atualizar estado local e notificar Home
+      // atualiza estado e avisa Home para recarregar (sincronização entre abas)
       setHabits(updated);
       DeviceEventEmitter.emit('habitsUpdated');
 
@@ -91,6 +103,7 @@ const HabitosScreen: React.FC = () => {
     }
   };
 
+  // Marca um hábito como concluído: atualiza lista, grava data e incrementa XP
   const concludeHabit = async (id: string) => {
     try {
       const updated = habits.map((h) => {
@@ -101,7 +114,7 @@ const HabitosScreen: React.FC = () => {
       });
       await AsyncStorage.setItem(HABITS_KEY, JSON.stringify(updated));
 
-      // atualizar XP
+      // atualiza XP armazenado
       const raw = await AsyncStorage.getItem('@xp');
       const currentXp = raw ? Number(raw) : 0;
       const newXp = currentXp + 10;
@@ -115,6 +128,7 @@ const HabitosScreen: React.FC = () => {
     }
   };
 
+  // Exclui um hábito após confirmação do usuário
   const deleteHabit = async (id: string) => {
     Alert.alert('Confirmar', 'Deseja excluir este hábito?', [
       { text: 'Cancelar', style: 'cancel' },
