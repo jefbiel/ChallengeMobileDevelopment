@@ -1,86 +1,134 @@
-# 🚀 MAP — Módulo Avatar & Prevenção (Care Plus)
-
-**Disciplina:** [Preencha a Disciplina]
-
-**Grupo:** G³
-
-**Turma:** Engenharia de Software - 3º Ano
-
----
+# 📱 NewCare — Pequenos Hábitos, Grandes Conquistas
 
 ## 👥 Integrantes
 
-* Gilson Dias - RM552345
-* Gustavo Bezerra - RM553076
-* Gabriel de Mendonça - RM553149
-* Larissa Estella - RM552695
+| Nome                                 | RM       |
+| ------------------------------------ | -------- |
+| Gilson Dias Ramos Junior             | RM552345 |
+| Gustavo Bezerra Assumção             | RM553076 |
+| Jeferson Gabriel De Mendonça         | RM553149 |
+| Larissa Estella Gonçalves dos Santos | RM552695 |
 
-📺🔗 **Vídeo Explicativo:** [https://youtu.be/8gxoQRHYS10](https://youtu.be/8gxoQRHYS10)
+## 📌 Descrição do Projeto
 
----
+Aplicativo mobile desenvolvido em **React Native** com foco em saúde preventiva. O usuário cria e mantém hábitos saudáveis, acumulando XP conforme cumpre tarefas diárias. O avatar evolui conforme seu desempenho, reforçando o progresso.
 
-## 1. Contexto e Solução
-
-### 1.1 O Problema
-A Care Plus precisa de soluções digitais que promovam **prevenção e bem-estar**, aumentando o engajamento do usuário em **hábitos saudáveis** (sem realizar diagnósticos clínicos ou telemedicina).
-
-### 1.2 A Solução Proposta: MAP
-Desenvolvemos um protótipo de gamificação em React Native, o **MAP** (Módulo Avatar & Prevenção). A solução tem como núcleo um **avatar** que representa o usuário e um **sistema de pontos (XP)**, incentivando a adoção e a manutenção de rotinas saudáveis.
-
-**Objetivo:** Prototipar uma solução de saúde digital que promova prevenção e bem-estar através de gamificação, com evidências de funcionamento no emulador Android.
-
-### 1.3 Módulo Extra (Protótipo IoT/IA)
-O projeto inclui um script experimental em Python (*Detector de Fadiga*) que simula como dados de sensores/visão computacional (detecção de micro-sono / bocejo) poderiam gerar telemetria para a plataforma (função apenas demonstrativa, não clínica).
+Protótipo acadêmico para a disciplina **Mobile Development and IoT**.
 
 ---
 
-## 2. Funcionalidades Implementadas
+## 🚀 Funcionalidades
 
-O aplicativo foi estruturado com as seguintes funcionalidades:
-
-* **Tela de Login:** Validação básica de formulário e navegação para o app.
-* **Tela Home:** Exibe resumo, progresso de hábitos, XP acumulado e lista de exames/recomendações.
-* **Tela Hábitos:** Permite **criar, listar, concluir/excluir** hábitos ativos, além de visualizar histórico e estatísticas.
-* **Tela Perfil:** Exibe o avatar, o XP acumulado e o histórico de atividades.
-* **Sincronização Interna:** Atualização em tempo real da Home via evento (`DeviceEventEmitter`) quando hábitos são criados ou concluídos.
-* **Armazenamento Local:** Uso de `AsyncStorage` para persistência dos dados (chaves `@habitos` e `@xp`).
+* Cadastro e gerenciamento de hábitos
+* Evolução do avatar através de XP
+* Histórico de conquistas
+* Navegação entre telas com atualização imediata
+* Interface prática e gamificada
 
 ---
 
-## 3. Critérios de Avaliação e Estrutura
+## 🧱 Arquitetura & Tecnologias
 
-### 3.1 Mapeamento de Arquivos Chave
-
-| Requisito | Arquivo/Módulo |
-| :--- | :--- |
-| **Login e Validação** (15 pts) | `src/screens/LoginScreen.tsx` |
-| **Telas / Componentes** (40 pts) | `src/screens/HomeScreen.tsx`, `HabitosScreen.tsx`, `PerfilScreen.tsx` |
-| **Estilização (StyleSheet)** (25 pts) | Estilos centralizados nas principais telas (`StyleSheet.create`) |
-| **Arquitetura** (10 pts) | Organização em `src/screens`, `src/navigation`, `src/assets` |
-| **Navegação** | `src/navigation/MainTabs.tsx` |
-
-### 3.2 Credenciais de Teste (Login)
-O login realiza apenas validação local de formato. Use estas credenciais para acessar o app:
-
-* **Email:** `demo@test.com`
-* **Senha:** `123456`
+* **React Native**
+* **TypeScript**
+* **React Navigation**
+* Async Storage
+* Componentização por telas e navegação stack/tab
 
 ---
 
-## 4. Setup e Execução
+## 🛠️ Instalação & Configuração
 
-### 4.1 Requisitos de Ambiente
+### 4️⃣ Setup & Execução
 
-* **Node.js:** 18.x ou 20.x
-* **NPM:** 9.x ou Yarn equivalente
-* **Android SDK / AVD:** Configurado para emulação Android
+### 4.1 Pré‑requisitos
 
-### 4.2 Instalação de Dependências (React Native)
+* Node.js **18.x** ou **20.x**
+* NPM 9.x ou Yarn
+* Android Studio com SDK + AVD configurado
+* (Opcional) dispositivo Android com USB Debugging
 
-Instale os pacotes principais e as dependências de navegação/armazenamento:
+### 4.2 Instalar Dependências
 
 ```bash
 npm install
+
+# Navegação e utilitários
 npm install @react-navigation/native @react-navigation/native-stack @react-navigation/bottom-tabs \
-	react-native-screens react-native-safe-area-context react-native-gesture-handler \
-	@react-native-picker/picker react-native-vector-icons @react-native-async-storage/async-storage
+react-native-screens react-native-safe-area-context react-native-gesture-handler \
+@react-native-picker/picker react-native-vector-icons @react-native-async-storage/async-storage
+```
+
+### 4.3 Limpeza de Cache (Recomendado)
+
+```bash
+# Reinicia o Metro Bundler com cache limpo
+npx react-native start --reset-cache
+
+cd android
+./gradlew clean
+cd ..
+
+# Verificar cache do npm (opcional)
+npm cache verify
+```
+
+### 4.4 Executar no Emulador Android
+
+**Terminal 1 — Metro Bundler**
+
+```bash
+npx react-native start
+```
+
+**Terminal 2 — Build e execução**
+
+```bash
+npx react-native run-android
+```
+
+**Tudo em um comando (com Metro ativo):**
+
+```bash
+npx react-native run-android --variant=debug
+```
+
+---
+
+## 5️⃣ Evidências para Entrega
+
+No PDF ou ZIP incluir:
+
+* ✔ Prints das telas (Login, Home, Hábitos, Perfil) no emulador Android
+* ✔ Print do diretório do projeto e fontes (.tsx / estilos)
+* ✔ Link do repositório GitHub
+* 🎥 Vídeo curto demonstrando funcionamento (opcional)
+
+---
+
+## 🏁 Resultado Esperado
+
+Ao executar o app, o usuário poderá:
+
+* Registrar e concluir hábitos diariamente
+* Ganhar XP e evoluir o avatar
+* Acompanhar progresso no perfil
+* Navegar entre telas com sincronização interna
+
+> Aplicação com foco educacional/saúde preventiva — sem caráter diagnóstico.
+
+---
+
+## 📚 Licença
+
+© 2025 — Grupo **G³**
+Projeto acadêmico — uso exclusivo para fins educacionais.
+
+---
+
+👨‍💻 Desenvolvido pela **G³ — NewCare**
+**Pequenos hábitos, grandes conquistas.**
+
+
+
+
