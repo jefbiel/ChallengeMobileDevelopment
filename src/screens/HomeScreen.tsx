@@ -40,6 +40,14 @@ const HomeScreen: React.FC = () => {
     Alert.alert('Agendamento', `Agendamento necessário para ${rec.title}`);
   };
 
+  const handleViewDetails = (exam: any) => {
+    const message = `${exam.title}\nLocal: ${exam.subtitle}\nData: ${exam.date}\n\nInstruções:\n- Jejum de 8 horas\n- Levar documento de identificação\n\nObservações: Resultado em até 3 dias úteis.`;
+    Alert.alert(exam.title, message, [
+      { text: 'Fechar', style: 'cancel' },
+      { text: 'Agendar', onPress: () => Alert.alert('Agendamento', `Solicitado agendamento para ${exam.title} em ${exam.date}`) },
+    ]);
+  };
+
   return (
     <View style={styles.screen}>
       <View style={styles.header}>
@@ -121,7 +129,7 @@ const HomeScreen: React.FC = () => {
                 <Text style={styles.upcomingSubtitle}>{exam.subtitle}</Text>
               </View>
 
-              <TouchableOpacity style={styles.upcomingLink} onPress={() => Alert.alert('Detalhes', `Abrir detalhes de: ${exam.title}`)}>
+              <TouchableOpacity style={styles.upcomingLink} onPress={() => handleViewDetails(exam)}>
                 <Text style={styles.upcomingLinkText}>Ver detalhes</Text>
               </TouchableOpacity>
             </View>
