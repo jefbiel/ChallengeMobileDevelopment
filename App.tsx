@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { StatusBar, StyleSheet } from 'react-native';
+import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './src/screens/LoginScreen';
@@ -32,10 +32,6 @@ function App(): React.ReactElement {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+// styles not needed at the root; removed to avoid unused variable lint error
 
 export default App;
