@@ -97,7 +97,7 @@ const PerfilScreen: React.FC = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Image
-          source={require('../assets/img/NewCareLogo.png')}
+          source={require('../assets/img/GabrielM.jpg')}
           style={styles.avatar}
           resizeMode="cover"
         />
