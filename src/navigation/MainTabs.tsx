@@ -1,19 +1,14 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import HabitosScreen from '../screens/HabitosScreen';
+import PerfilScreen from '../screens/PerfilScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
-const PlaceholderScreen: React.FC<{ label: string }> = ({ label }) => (
-  <View style={styles.placeholderContainer}>
-    <Text>{label}</Text>
-  </View>
-);
-
-const ProfileScreen: React.FC = () => <PlaceholderScreen label="Perfil" />;
+// PlaceholderScreen removed; using `PerfilScreen` for the Perfil tab
 
 type TabIconProps = {
   routeName: string;
@@ -69,13 +64,11 @@ const MainTabs: React.FC = () => {
         component={HabitosScreen}
         options={{ title: 'Hábitos', tabBarLabel: 'Hábitos', tabBarAccessibilityLabel: 'Hábitos' }}
       />
-      <Tab.Screen name="Perfil" component={ProfileScreen} options={{ title: 'Perfil' }} />
+      <Tab.Screen name="Perfil" component={PerfilScreen} options={{ title: 'Perfil' }} />
     </Tab.Navigator>
   );
 };
 
 export default MainTabs;
 
-const styles = StyleSheet.create({
-  placeholderContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-});
+// no local styles required

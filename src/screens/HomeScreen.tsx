@@ -82,7 +82,11 @@ const HomeScreen: React.FC = () => {
         if (h.id === habitId) {
           const wasCompleted = Boolean(h.completed);
           if (!wasCompleted) increased = true;
-          return { ...h, completed: !wasCompleted };
+          if (!wasCompleted) {
+            return { ...h, completed: true, completionDate: new Date().toISOString(), xpEarned: 10 };
+          }
+          // unmarking
+          return { ...h, completed: false, completionDate: undefined };
         }
         return h;
       });
