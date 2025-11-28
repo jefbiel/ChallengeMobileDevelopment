@@ -7,6 +7,8 @@ import {
   Alert,
   Image,
   ScrollView,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
@@ -115,7 +117,6 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#ffffff' },
   header: {
-    height: 64,
     paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
@@ -123,6 +124,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#eef2f6',
     backgroundColor: '#fff',
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 8) : 12,
+    paddingBottom: 12,
   },
   logo: { width: 220, height: 40 },
   bell: { padding: 8 },
